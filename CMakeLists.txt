@@ -6,12 +6,16 @@ project(LCPSolve
 	LANGUAGES CXX
 )
 set(CMAKE_CXX_STANDARD 14)
-add_definitions(-DCMAKE_EXPORT_COMPILE_COMMANDS=ON)
 
 # Default to release build if no build type is selected.
 if(NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE RELEASE)
 endif()
+
+# Enable testing.
+enable_testing()
+add_subdirectory(tests)
+add_subdirectory(tests/googletest)
 
 # Add library.
 add_library(${PROJECT_NAME} STATIC 
