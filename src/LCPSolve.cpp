@@ -52,11 +52,12 @@ namespace LCPSolve
         const int maxIter = pow(2, dim);
         int iter {0};
         bool solFound = false;
+        bool rayTermination = false;
         while ((!solFound) && (iter < maxIter)) {
             // Check for ray termination.
-            bool rayTermination = checkRayTermination(tableau, pivotCol);
-            if (rayTermination) {
+            if (checkRayTermination(tableau, pivotCol)) {
                 solFound = true;
+                rayTermination = true;
             } else {
                 // Minimum ratio test to determine the pivot row (blocked/dropped variable).
                 pivotRow = minRatioTest(tableau, pivotCol);
@@ -78,18 +79,17 @@ namespace LCPSolve
         }
 
         // Return solution.
-        if (solFound) {
-            Eigen::MatrixXd sols = extractSolution(tableau);
-            solution.z = sols.col(0);
-            solution.w = sols.col(1);
-            solution.exitCond = 0;
-        } else {
-            Eigen::MatrixXd sols = extractSolution(tableau);
-            solution.z = sols.col(0);
-            solution.w = sols.col(1);
+        Eigen::MatrixXd sols = extractSolution(tableau);
+        solution.z = sols.col(0);
+        solution.w = sols.col(1);
+        if (solFound)
+        {
+            solution.exitCond = rayTermination ? 1 : 0;
+        } 
+        else 
+        {
             solution.exitCond = 3;
         }
-        
         return solution;
     }
 

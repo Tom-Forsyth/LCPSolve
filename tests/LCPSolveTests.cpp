@@ -18,11 +18,14 @@ TEST(LCPSolveTests, R2Test)
         {-1, 1}
     };
     Eigen::Vector<double, 2> q {-3, 1};
+
+    // Expected.
     Eigen::Vector<double, 2> zTruth {2.0, 1.0};
+    int exitConditionExpected = 0;
 
     // Test solution.
     LCPSolve::LCP sol = LCPSolve::LCPSolve(M, q);
-    EXPECT_TRUE(isApproxEqual(sol.z, zTruth));
+    EXPECT_TRUE(isApproxEqual(sol.z, zTruth) && sol.exitCond == exitConditionExpected);
 }
 
 TEST(LCPSolveTests, R3Test)
@@ -34,11 +37,14 @@ TEST(LCPSolveTests, R3Test)
         { 1,  5, -2}
     };
     Eigen::Vector<double, 3> q {-2, 5, -1};
+
+    // Expected.
     Eigen::Vector<double, 3> zTruth {1, 0, 0};
+    int exitConditionExpected = 0;
 
     // Test solution.
     LCPSolve::LCP sol = LCPSolve::LCPSolve(M, q);
-    EXPECT_TRUE(isApproxEqual(sol.z, zTruth));
+    EXPECT_TRUE(isApproxEqual(sol.z, zTruth) && sol.exitCond == exitConditionExpected);
 }
 
 TEST(LCPSolveTests, R4Test)
@@ -51,14 +57,16 @@ TEST(LCPSolveTests, R4Test)
         { 4,  9,  0,  1}
     };
     Eigen::Vector<double, 4> q {-3, 4, 5, 1};
+
+    // Expected.
     Eigen::Vector<double, 4> zTruth {1.5294, 0.64705, 0.58823, 0};
+    int exitConditionExpected = 0;
 
     // Test solution.
     LCPSolve::LCP sol = LCPSolve::LCPSolve(M, q);
-    EXPECT_TRUE(isApproxEqual(sol.z, zTruth, 1e-3));
+    EXPECT_TRUE(isApproxEqual(sol.z, zTruth, 1e-3) && sol.exitCond == exitConditionExpected);
 }
 
-// Test 4 (Secondary Ray).
 TEST(LCPSolveTests, R3SecondaryRayTest)
 {
     // Setup.
@@ -68,14 +76,16 @@ TEST(LCPSolveTests, R3SecondaryRayTest)
         { 1,  5, -2}
     };
     Eigen::Vector<double, 3> q {-2, 5, -1.5};
+
+    // Expected.
     Eigen::Vector<double, 3> zTruth {0, 0, 0.1};
+    int exitConditionExpected = 1;
 
     // Test solution.
     LCPSolve::LCP sol = LCPSolve::LCPSolve(M, q);
-    EXPECT_TRUE(isApproxEqual(sol.z, zTruth));
+    EXPECT_TRUE(isApproxEqual(sol.z, zTruth) && sol.exitCond == exitConditionExpected);
 }
 
-// Test 5.
 TEST(LCPSolveTests, R2Test2)
 {
     // Setup.
@@ -84,9 +94,29 @@ TEST(LCPSolveTests, R2Test2)
         {2,  1}
     };
     Eigen::Vector<double, 2> q {-4, 3};
+
+    // Expected.
     Eigen::Vector<double, 2> zTruth {4, 0};
+    int exitConditionExpected = 0;
 
     // Test solution.
     LCPSolve::LCP sol = LCPSolve::LCPSolve(M, q);
-    EXPECT_TRUE(isApproxEqual(sol.z, zTruth));
+    EXPECT_TRUE(isApproxEqual(sol.z, zTruth) && sol.exitCond == exitConditionExpected);
+}
+
+TEST(LCPSolveTests, TestIncorrectInputDims)
+{
+    // Setup.
+    Eigen::Matrix<double, 2, 2> M{
+        {1, -5},
+        {2,  1}
+    };
+    Eigen::Vector<double, 3> q{ -4, 3, -3};
+
+    // Expected.
+    int exitConditionExpected = 2;
+
+    // Test solution.
+    LCPSolve::LCP sol = LCPSolve::LCPSolve(M, q);
+    EXPECT_TRUE(sol.exitCond == exitConditionExpected);
 }
