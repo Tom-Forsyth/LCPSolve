@@ -4,8 +4,8 @@ An LCP solver based on Lemke's method.
 ## Problem Statement.
 Given a matrix $M$ and a vector $q$, solve the LCP below for $z$ and $w$.
 
-$Mz + q = w$
-$0 \leq z \perp w \geq 0$
+$$Mz + q = w$$
+$$0 \leq z \perp w \geq 0$$
 
 ## Example Code
     Eigen::Matrix<double, 2, 2> M {
@@ -21,7 +21,8 @@ $0 \leq z \perp w \geq 0$
     sol.exitCond = 0
 
 ## Exit Conditions
-    0 - Solution found.
-    1 - Secondary ray termination.
+    0 - Valid solution found.
+    1 - Secondary ray termination (approximate solution).
     2 - Incorrect input dimensions.
     3 - Exceeded maximum iterations.
+    4 - Numerical overflow/underflow.

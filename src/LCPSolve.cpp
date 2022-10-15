@@ -1,5 +1,6 @@
 #include "LCPSolve.h"
 #include <Eigen/Dense>
+#include <cmath>
 
 namespace LCPSolve
 {
@@ -14,6 +15,7 @@ namespace LCPSolve
     bool checkRayTermination(const Eigen::MatrixXd &tableu, const int &pivotCol);
     int minRatioTest(const Eigen::MatrixXd &tableau, const int &pivotCol);
     Eigen::MatrixXd extractSolution(const Eigen::MatrixXd &tableau);
+    bool isNumericallyStable(const Eigen::VectorXd& solution);
 
     // Solve LCP by Lemke's Method.
     LCP LCPSolve(Eigen::MatrixXd M, Eigen::VectorXd q) {
@@ -78,7 +80,7 @@ namespace LCPSolve
             }
         }
 
-        // Return solution.
+        // Extract solution and exit condition.
         Eigen::MatrixXd sols = extractSolution(tableau);
         solution.z = sols.col(0);
         solution.w = sols.col(1);
@@ -90,6 +92,13 @@ namespace LCPSolve
         {
             solution.exitCond = 3;
         }
+
+        // Check for numerical stability.
+        if (!isNumericallyStable(solution.z))
+        {
+            solution.exitCond = 4;
+        }
+
         return solution;
     }
 
@@ -280,5 +289,17 @@ namespace LCPSolve
         sols.col(0) = z;
         sols.col(1) = w;
         return sols;
+    }
+
+    bool isNumericallyStable(const Eigen::VectorXd& solution)
+    {
+        for (double num : solution)
+        {
+            if (isnan(num) || isinf(num))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 }
