@@ -1,8 +1,16 @@
 #include <gtest/gtest.h>
 #include "LCPSolve.h"
 
-// Test 1.
-TEST(LCPSolveTests, Test1)
+// Helper function to compare Eigen vectors.
+bool isApproxEqual(const Eigen::VectorXd& vec1, const Eigen::VectorXd& vec2, double tolerance = 1e-10)
+{
+    if ((vec1 - vec2).norm() < tolerance) {
+        return true;
+    }
+    return false;
+}
+
+TEST(LCPSolveTests, R2Test)
 {
     // Setup.
     Eigen::Matrix<double, 2, 2> M {
@@ -14,16 +22,10 @@ TEST(LCPSolveTests, Test1)
 
     // Test solution.
     LCPSolve::LCP sol = LCPSolve::LCPSolve(M, q);
-    double eps = 1e-10;
-    bool pass = false;
-    if ((sol.z - zTruth).norm() < eps) {
-        pass = true;
-    }
-    EXPECT_TRUE(pass);
+    EXPECT_TRUE(isApproxEqual(sol.z, zTruth));
 }
 
-// Test 2.
-TEST(LCPSolveTests, Test2)
+TEST(LCPSolveTests, R3Test)
 {
     // Setup.
     Eigen::Matrix<double, 3, 3> M {
@@ -36,16 +38,10 @@ TEST(LCPSolveTests, Test2)
 
     // Test solution.
     LCPSolve::LCP sol = LCPSolve::LCPSolve(M, q);
-    double eps = 1e-10;
-    bool pass = false;
-    if ((sol.z - zTruth).norm() < eps) {
-        pass = true;
-    }
-    EXPECT_TRUE(pass);
+    EXPECT_TRUE(isApproxEqual(sol.z, zTruth));
 }
 
-// Test 3.
-TEST(LCPSolveTests, Test3)
+TEST(LCPSolveTests, R4Test)
 {
     // Setup.
     Eigen::Matrix<double, 4, 4> M {
@@ -59,16 +55,11 @@ TEST(LCPSolveTests, Test3)
 
     // Test solution.
     LCPSolve::LCP sol = LCPSolve::LCPSolve(M, q);
-    double eps = 1e-3; 
-    bool pass = false;
-    if ((sol.z - zTruth).norm() < eps) {
-        pass = true;
-    }
-    EXPECT_TRUE(pass);
+    EXPECT_TRUE(isApproxEqual(sol.z, zTruth, 1e-3));
 }
 
 // Test 4 (Secondary Ray).
-TEST(LCPSolveTests, Test4)
+TEST(LCPSolveTests, R3SecondaryRayTest)
 {
     // Setup.
     Eigen::Matrix<double, 3, 3> M {
@@ -81,16 +72,11 @@ TEST(LCPSolveTests, Test4)
 
     // Test solution.
     LCPSolve::LCP sol = LCPSolve::LCPSolve(M, q);
-    double eps = 1e-10;
-    bool pass = false;
-    if ((sol.z - zTruth).norm() < eps) {
-        pass = true;
-    }
-    EXPECT_TRUE(pass);
+    EXPECT_TRUE(isApproxEqual(sol.z, zTruth));
 }
 
 // Test 5.
-TEST(LCPSolveTests, Test5)
+TEST(LCPSolveTests, R2Test2)
 {
     // Setup.
     Eigen::Matrix<double, 2, 2> M {
@@ -102,10 +88,5 @@ TEST(LCPSolveTests, Test5)
 
     // Test solution.
     LCPSolve::LCP sol = LCPSolve::LCPSolve(M, q);
-    double eps = 1e-10;
-    bool pass = false;
-    if ((sol.z - zTruth).norm() < eps) {
-        pass = true;
-    }
-    EXPECT_TRUE(pass);
+    EXPECT_TRUE(isApproxEqual(sol.z, zTruth));
 }
