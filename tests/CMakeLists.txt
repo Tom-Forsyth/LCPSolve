@@ -8,7 +8,7 @@ add_executable(${THIS}
 )
 target_link_libraries(${THIS} PUBLIC
     gtest_main
-    LCPSolve
+    LCPSolveLib
 )
 
 # Add tests.
