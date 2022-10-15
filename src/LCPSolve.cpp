@@ -295,7 +295,7 @@ namespace LCPSolve
     {
         for (double num : solution)
         {
-            if (isnan(num) || isinf(num))
+            if (!std::isfinite(num))
             {
                 return false;
             }
